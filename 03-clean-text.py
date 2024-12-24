@@ -1,17 +1,20 @@
-import unicodedata
+import os
+import string
 
-path_f = 'text.txt'
-punc_marks = {}
-for line in open(path_f):
-    for char in line:
-        category = unicodedata.category(char)
-        if category.startswith('P'):
-            punc_marks[char] = 1
+def read_file(file_path):
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"The file at '{file_path}' does not exist.")
+    with open(file_path, 'r', encoding='utf-8') as file:
+        return file.read()
 
-punctuation = ''.join(punc_marks)
-print(punctuation)
 
-def clean_word(word):
-    return word.strip(punctuation).lower()
+def clean_text(text):
+    translator = str.maketrans('', '', string.punctuation)
+    words = text.translate(translator).split()
+    return words
 
-print(clean_word('“Behold!”'))
+input_path = input("Enter input file path: ").strip()
+text = read_file(input_path)
+
+for line in open(input_path):
+        print(clean_text(line))
